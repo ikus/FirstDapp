@@ -8,7 +8,7 @@ var fileServer = new nStatic.Server('./chapter1');
 http.createServer(function(request,response){
 	//response.writeHead(200,{"Content-Type":"text/plain"})
 	//response.end("Hola Mundo Segundo intento")
-	fileServer.serve(req, res);
+	fileServer.serve(request, response);
 	
 	fs.readFile("chapter1/index.html", function(err, data){
 		response.writeHead(200, {'Content-Type': 'text/html'});
