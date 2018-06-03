@@ -3,7 +3,7 @@ var fs = require("fs")
 var express = require('express');
 var app = express();
 var nStatic = require('node-static');
-var fileServer = new nStatic.Server('./chapter1');
+var fileServer = new nStatic.Server('./chapter1/js');
 
 http.createServer(function(request,response){
 	//response.writeHead(200,{"Content-Type":"text/plain"})
