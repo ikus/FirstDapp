@@ -13,7 +13,7 @@ http.createServer(function(request,response){
 		response.writeHead(200, {'Content-Type': 'text/html'});
 		response.write(data);
 		response.end();
-	})*/;
+	})*/
 	
 	fileServer.serve(request, response);
 }).listen(process.env.PORT)
