@@ -1,5 +1,10 @@
 var http = require('http')
 var fs = require("fs")
+var express = require('express');
+var app = express();
+
+//setting middleware
+app.use(express.static('chapter1')); //Serves resources from public folder
 
 http.createServer(function(request,response){
 	//response.writeHead(200,{"Content-Type":"text/plain"})
