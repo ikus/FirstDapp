@@ -3,9 +3,6 @@ var fs = require("fs")
 var express = require('express');
 var app = express();
 
-//setting middleware
-app.use(express.static('/chapter1')); //Serves resources from public folder
-/*
 http.createServer(function(request,response){
 	//response.writeHead(200,{"Content-Type":"text/plain"})
 	//response.end("Hola Mundo Segundo intento")
@@ -14,4 +11,8 @@ http.createServer(function(request,response){
 		response.write(data);
 		response.end();
 	})
-}).listen(process.env.PORT)*/
+}).listen(process.env.PORT)
+
+
+//setting middleware
+app.use(express.static('/chapter1')); //Serves resources from public folder
