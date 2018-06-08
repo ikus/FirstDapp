@@ -16,7 +16,7 @@ var Voting = contract(voting_artifacts);
 // For application bootstrapping, check out window.addEventListener below.
 var accounts;
 var account;
-var candidates ={"Rama","candidate-1","Nick","candidate-2","Jose","candidate-3"};
+var candidates ={"Rama":"candidate-1","Nick":"candidate-2","Jose":"candidate-3"};
 window.App = {
   start: function() {
     var self = this;
@@ -43,18 +43,26 @@ window.App = {
     //Vote for a candidate
     self.loadCandidatesAndVotes();
   },
-  loadCandidatesAndVotes: function(){
+  loadCandidatesAndVotes: function() {
     var candidateNames = Object.keys(candidates);
-    for (var i = 0; i < candidateNames.length; i++) {
+    for (var i = 0; i < candidateNames.length-2; i++) {
       let name = candidateNames[i];
-      Voting.deployed().then(function(contractInstance) {
-        //contractInstance.totalVote('Nick').then(function(v) {console.log(v.toNumber())})
-        contractInstance.totalVotesFor.call(name).then(function(v) {
-          //console.log(v.toNumber())
+      Voting.deployed().then(function(contractInstance) {      
+        contractInstance.totalVotesFor.call(name).then(function(f) {          
           $("#"+candidates[name]).html(f.toNumber());
         })
       })
     }
+  },
+  voteForCandidate: function() {
+    var candidateName = $("#candidate").val();
+    Voting.deployed().then(function(contractInstance) {
+          contractInstance.voteForCandidate(candidateName,{from : web3.eth.accounts[0]}).then(function(v) {
+            contractInstance.totalVotesFor.call(candidateName).then(function(f) {                
+                $("#"+candidates[candidateName]).html(f.toString());
+             });
+          })
+    })    
   }
 };
 
