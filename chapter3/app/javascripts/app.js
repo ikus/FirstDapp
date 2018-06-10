@@ -35,6 +35,8 @@ window.App = {
      candidates[web3.toUtf8(candidateArray[i])] = "candidate-" + i;
     }
     self.setupCandidateRows();
+    self.populateCandidateVotes();
+    self.populateTokenData();
    });
   });
  },
@@ -42,6 +44,36 @@ window.App = {
  setupCandidateRows: function() {
   Object.keys(candidates).forEach(function (candidate) { 
    $("#candidate-rows").append("<tr><td>" + candidate + "</td><td id='" + candidates[candidate] + "'></td></tr>");
+  });
+ },
+
+ populateCandidateVotes: function() {
+  let candidateNames = Object.keys(candidates);
+  for (var i = 0; i < candidateNames.length; i++) {
+   let name = candidateNames[i];
+   Voting.deployed().then(function(contractInstance) {
+    contractInstance.totalVotesFor.call(name).then(function(v) {
+     $("#" + candidates[name]).html(v.toString());
+    });
+   });
+  }
+ },
+
+ populateTokenData: function() {
+  Voting.deployed().then(function(contractInstance) {
+   contractInstance.totalTokens.call().then(function(v) {
+    $("#tokens-total").html(v.toString());
+   });
+   contractInstance.tokensSold.call().then(function(v) {
+    $("#tokens-sold").html(v.toString());
+   });
+   contractInstance.tokenPrice.call().then(function(v) {
+    tokenPrice = parseFloat(web3.fromWei(v.toString()));
+    $("#token-cost").html(tokenPrice + " Ether");
+   });
+   web3.eth.getBalance(contractInstance.address, function(error, result) {
+    $("#contract-balance").html(web3.fromWei(result.toString()) + " Ether");
+   });
   });
  },
 };
@@ -59,4 +91,4 @@ window.addEventListener('load', function() {
  }
 
  App.start();
-});
+});s
