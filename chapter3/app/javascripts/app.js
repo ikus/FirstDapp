@@ -1,4 +1,4 @@
-avascript Template
+//javascript Template
 // Import the page's CSS. Webpack will know what to do with it.
 import "../stylesheets/app.css";
 
@@ -20,7 +20,30 @@ window.App = {
 
   // Bootstrap the MetaCoin abstraction for Use.
   Voting.setProvider(web3.currentProvider);
- }
+  self.populateCandidates();
+ },
+
+ populateCandidates: function() {
+  var self = this;
+   
+  Voting.deployed().then(function(contractInstance) {
+   contractInstance.allCandidates.call().then(function(candidateArray) {
+    for(let i=0; i < candidateArray.length; i++) {
+     /* We store the candidate names as bytes32 on the blockchain. We use the
+      * handy toUtf8 method to convert from bytes32 to string
+      */ 
+     candidates[web3.toUtf8(candidateArray[i])] = "candidate-" + i;
+    }
+    self.setupCandidateRows();
+   });
+  });
+ },
+
+ setupCandidateRows: function() {
+  Object.keys(candidates).forEach(function (candidate) { 
+   $("#candidate-rows").append("<tr><td>" + candidate + "</td><td id='" + candidates[candidate] + "'></td></tr>");
+  });
+ },
 };
 
 window.addEventListener('load', function() {
