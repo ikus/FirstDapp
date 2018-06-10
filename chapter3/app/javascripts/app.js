@@ -76,6 +76,36 @@ window.App = {
    });
   });
  },
+ buyTokens: function() {
+  var self = this;
+  let tokensToBuy = $("#buy").val();
+  let price = tokensToBuy * tokenPrice;
+  $("#buy-msg").html("Purchase order has been submitted. Please wait.");
+  Voting.deployed().then(function(contractInstance) {
+   contractInstance.buy({value: web3.toWei(price, 'ether'), from: web3.eth.accounts[0]}).then(function(v) {
+    $("#buy-msg").html("");
+   })
+  });
+  self.populateTokenData();
+ },
+ voteForCandidate: function() {
+  let candidateName = $("#candidate").val();
+  let voteTokens = $("#vote-tokens").val();
+  $("#msg").html("Vote has been submitted. The vote count will increment as soon as the vote is recorded on the blockchain. Please wait.")
+  $("#candidate").val("");
+  $("#vote-tokens").val("");
+
+  Voting.deployed().then(function(contractInstance) {
+   contractInstance.voteForCandidate(candidateName, voteTokens, {gas: 140000, from: web3.eth.accounts[0]}).then(function() {
+   let div_id = candidates[candidateName];
+   return contractInstance.totalVotesFor.call(candidateName).then(function(v) {
+    $("#" + div_id).html(v.toString());
+    $("#msg").html("");
+   });
+   });
+  });
+ }
+
 };
 
 window.addEventListener('load', function() {
@@ -91,4 +121,4 @@ window.addEventListener('load', function() {
  }
 
  App.start();
-});s
+});
